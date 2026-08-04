@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -7,4 +8,58 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Os models serão definidos durante a implementação.
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+
+  @@map("task_status")
+}
+
+model User {
+  id           String     @id @default(uuid()) @db.Uuid
+  email        String     @unique @db.VarChar(255)
+  passwordHash String     @map("password_hash") @db.VarChar(255)
+  taskLists    TaskList[]
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("users")
+}
+
+model TaskList {
+  id     String @id @default(uuid()) @db.Uuid
+  name   String @db.VarChar(100)
+  userId String @map("user_id") @db.Uuid
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tasks Task[]
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@unique([userId, name], map: "task_lists_user_id_name_key")
+  @@index([userId], map: "task_lists_user_id_idx")
+  @@map("task_lists")
+}
+
+model Task {
+  id          String     @id @default(uuid()) @db.Uuid
+  title       String     @db.VarChar(200)
+  description String     @db.Text
+  status      TaskStatus @default(PENDING)
+  dueDate     DateTime   @map("due_date") @db.Timestamptz(3)
+  listId      String     @map("list_id") @db.Uuid
+
+  list TaskList @relation(fields: [listId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([listId], map: "tasks_list_id_idx")
+  @@index([status], map: "tasks_status_idx")
+  @@index([dueDate], map: "tasks_due_date_idx")
+  @@index([listId, status], map: "tasks_list_id_status_idx")
+  @@map("tasks")
+}

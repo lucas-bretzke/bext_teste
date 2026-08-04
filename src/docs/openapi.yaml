@@ -1,0 +1,15 @@
+openapi: 3.0.3
+info:
+  title: Bext Task Management API
+  version: 1.0.0
+  description: Documentação da API a ser preenchida conforme a implementação.
+servers:
+  - url: http://localhost:3333/api/v1
+    description: Ambiente local
+paths: {}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -2,23 +2,21 @@
 
 API para gerenciamento de tarefas desenvolvida com Express.js, TypeScript, PostgreSQL e Prisma.
 
-O projeto ainda está em desenvolvimento. Até o momento, a estrutura principal da API e o fluxo de autenticação já estão prontos. Os módulos de listas e tarefas ainda precisam ser implementados.
-
 ## O que já está pronto
 
-* estrutura inicial da aplicação, incluindo `app.ts` e `server.ts`;
-* configuração e validação das variáveis de ambiente;
-* tratamento centralizado de erros;
-* logs com Pino;
-* cadastro de usuários pela rota `POST /auth/register`;
-* login pela rota `POST /auth/login`;
-* geração de token JWT;
-* repositório de usuários utilizando Prisma;
-* middleware de autenticação para proteger rotas privadas;
-* testes unitários e de integração com Vitest e Supertest;
-* documentação OpenAPI disponível em `/docs`.
-
-O middleware de autenticação já está preparado para ser utilizado nos módulos `lists` e `tasks`, que ainda não foram desenvolvidos.
+- estrutura inicial da aplicação, incluindo `app.ts` e `server.ts`;
+- configuração e validação das variáveis de ambiente;
+- tratamento centralizado de erros;
+- logs com Pino;
+- cadastro de usuários pela rota `POST /auth/register`;
+- login pela rota `POST /auth/login`;
+- geração e validação de token JWT;
+- middleware de autenticação para proteger rotas privadas;
+- CRUD de listas (`POST` / `GET` em `/lists`);
+- CRUD de tarefas (`POST` / `GET` / `PATCH` / `DELETE` em `/tasks`), com filtro por lista, status e data de vencimento;
+- controle de acesso: cada usuário só enxerga e manipula as próprias listas e tarefas;
+- testes unitários e de integração com Vitest e Supertest, cobrindo sucesso, validação e controle de acesso entre usuários;
+- documentação OpenAPI disponível em `/docs`.
 
 ## Como executar o projeto
 
@@ -78,7 +76,7 @@ docs/
   architecture/
 ```
 
-Os módulos foram separados por responsabilidade. O módulo `auth`, por exemplo, utiliza o repositório localizado no módulo `users` para acessar os dados dos usuários.
+Os módulos foram separados por responsabilidade. `auth` utiliza o repositório do módulo `users` para acessar dados de usuário; `tasks` utiliza o repositório do módulo `lists` para criar/listar tarefas e para validar que a lista informada pertence ao usuário autenticado. Detalhes em [`docs/architecture/architecture.md`](docs/architecture/architecture.md).
 
 ## Variáveis de ambiente
 

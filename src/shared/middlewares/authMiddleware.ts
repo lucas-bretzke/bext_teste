@@ -21,3 +21,11 @@ export function authMiddleware(req: Request, _res: Response, next: NextFunction)
     throw new UnauthorizedError('Token de autenticação inválido ou expirado.');
   }
 }
+
+export function getAuthenticatedUserId(req: Request): string {
+  if (!req.user) {
+    throw new UnauthorizedError('Token de autenticação ausente.');
+  }
+
+  return req.user.id;
+}

@@ -8,7 +8,7 @@ describe('POST /api/v1/auth/register', () => {
   let app: Express;
 
   beforeEach(() => {
-    app = buildTestApp(new FakeUserRepository());
+    app = buildTestApp({ userRepository: new FakeUserRepository() });
   });
 
   it('cadastra um usuário e retorna 201 com o token de acesso', async () => {
@@ -47,7 +47,7 @@ describe('POST /api/v1/auth/login', () => {
   let app: Express;
 
   beforeEach(async () => {
-    app = buildTestApp(new FakeUserRepository());
+    app = buildTestApp({ userRepository: new FakeUserRepository() });
     await request(app)
       .post('/api/v1/auth/register')
       .send({ email: 'ana@example.com', password: 'senha1234' });

@@ -1,5 +1,6 @@
 import express, { type Express } from 'express';
 import { createAuthRoutes } from '../../src/modules/auth/routes/auth.routes';
+import { createListRoutes } from '../../src/modules/lists/routes/list.routes';
 import { createTaskRoutes } from '../../src/modules/tasks/routes/task.routes';
 import { errorHandler } from '../../src/shared/middlewares/errorHandler';
 import type { IUserRepository } from '../../src/modules/users/repositories/IUserRepository';
@@ -17,6 +18,7 @@ export function buildTestApp(dependencies: TestAppDependencies = {}): Express {
 
   app.use(express.json());
   app.use('/api/v1/auth', createAuthRoutes(dependencies.userRepository));
+  app.use('/api/v1/lists', createListRoutes(dependencies.taskListRepository));
   app.use(
     '/api/v1/tasks',
     createTaskRoutes(dependencies.taskRepository, dependencies.taskListRepository),

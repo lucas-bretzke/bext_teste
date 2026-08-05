@@ -2,15 +2,19 @@ import { z } from 'zod';
 
 export const taskStatusSchema = z.enum(['PENDING', 'IN_PROGRESS', 'COMPLETED']);
 
-export const createTaskSchema = z.object({
+const taskFieldsSchema = z.object({
   title: z.string().trim().min(1, 'O título é obrigatório.').max(200),
   description: z.string().trim().min(1, 'A descrição é obrigatória.'),
-  status: taskStatusSchema.default('PENDING'),
+  status: taskStatusSchema,
   dueDate: z.coerce.date({ error: 'Data de vencimento inválida.' }),
   listId: z.uuid('Lista inválida.'),
 });
 
-export const updateTaskSchema = createTaskSchema
+export const createTaskSchema = taskFieldsSchema.extend({
+  status: taskStatusSchema.default('PENDING'),
+});
+
+export const updateTaskSchema = taskFieldsSchema
   .partial()
   .refine((data) => Object.keys(data).length > 0, 'Informe ao menos um campo para atualizar.');
 

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { createAuthRoutes } from '../modules/auth/routes/auth.routes';
+import { createTaskRoutes } from '../modules/tasks/routes/task.routes';
 
 export function createRoutes(): Router {
   const router = Router();
@@ -9,6 +10,7 @@ export function createRoutes(): Router {
   });
 
   router.use('/auth', createAuthRoutes());
+  router.use('/tasks', createTaskRoutes());
 
   return router;
 }
